@@ -256,9 +256,9 @@ const EmployeeSQLPage = () => {
     setError(null);
     
     try {
-      // Execute the query using Supabase's rpc call
-      const { data, error: supabaseError } = await supabase.rpc('execute_sql', { 
-        sql_query: query 
+      // Execute the query using Supabase's edge function
+      const { data, error: supabaseError } = await supabase.functions.invoke('execute_sql', { 
+        body: { sql_query: query }
       });
       
       if (supabaseError) {
