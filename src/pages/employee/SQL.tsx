@@ -64,22 +64,6 @@ const QueryResults = ({ data }: { data: any[] }) => {
   );
 };
 
-// Sample queries for quick access
-const SAMPLE_QUERIES = [
-  "SELECT * FROM BANK",
-  "SELECT * FROM BRANCH WHERE BankID = 1",
-  "SELECT * FROM EMPLOYEE",
-  "SELECT * FROM USERS",
-  "SELECT * FROM ACCOUNT",
-  "SELECT * FROM LOAN WHERE LoanAmount > 200000",
-  "SELECT * FROM TRANSACTION_HISTORY",
-  "SELECT COUNT(*) FROM LOAN GROUP BY BankID",
-  "SELECT AVG(Balance) FROM ACCOUNT",
-  "SELECT SUM(Balance) FROM ACCOUNT",
-  "SELECT * FROM USERS JOIN ACCOUNT ON USERS.UserID = ACCOUNT.UserID",
-  "SELECT * FROM BANK JOIN BRANCH ON BANK.BankID = BRANCH.BankID"
-];
-
 // Organized queries by contributor
 const CONTRIBUTOR_QUERIES = {
   chirag: [
@@ -480,31 +464,6 @@ const EmployeeSQLPage = () => {
           </CardContent>
         </Card>
 
-        {/* Sample Queries */}
-        <Card className="border-bank-navy/20">
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2">
-              <Info className="h-5 w-5 text-bank-navy" />
-              Simple Queries
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-2 grid-cols-1 md:grid-cols-2">
-              {SAMPLE_QUERIES.map((sample, index) => (
-                <Button
-                  key={index}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleSampleQuery(sample)}
-                  className="justify-start font-mono text-xs h-auto py-2"
-                >
-                  {sample}
-                </Button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
         {/* Query History */}
         {queryHistory.length > 0 && (
           <Card className="border-bank-navy/20">
@@ -554,27 +513,6 @@ const EmployeeSQLPage = () => {
                 Execute a query to see results here
               </div>
             )}
-          </CardContent>
-        </Card>
-
-        {/* Database Schema Info */}
-        <Card className="border-bank-navy/20">
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2">
-              <Database className="h-5 w-5 text-bank-navy" />
-              Database Schema
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-sm font-mono">
-              <p>BANK (BankID, BankName, BankMoney, NoOfBranches)</p>
-              <p>BRANCH (BranchID, BranchAdd, BankID)</p>
-              <p>EMPLOYEE (EmployeeID, Name, BranchID)</p>
-              <p>USERS (UserID, Name, Address, MobileNumber)</p>
-              <p>ACCOUNT (AccountNo, Balance, UserID, BranchID)</p>
-              <p>LOAN (LoanID, LoanAmount, Duration, Interest, LoanType, IssueDate, UserID, BankID)</p>
-              <p>TRANSACTION_HISTORY (TransactionID, TransactionAmount, TransactionTime, BranchID, AccountNo1, AccountNo2)</p>
-            </div>
           </CardContent>
         </Card>
       </div>
