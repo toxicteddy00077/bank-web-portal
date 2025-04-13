@@ -9,57 +9,57 @@ import { useToast } from "@/hooks/use-toast";
 import { 
   Database, 
   Play, 
+  Info, 
   XCircle,
   CheckCircle2,
   History,
   Copy,
+  Users,
+  CreditCard,
+  BarChart,
   User
 } from "lucide-react";
+import { mockDBService } from "@/services/mockDatabaseService";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { supabase } from "@/integrations/supabase/client";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 // Component to render query results generically
 const QueryResults = ({ data }: { data: any[] }) => {
-  if (!data || !data.length) return <div className="text-center py-4">No results returned</div>;
+  if (!data.length) return <div className="text-center py-4">No results returned</div>;
   
   // Extract keys from first result
   const keys = Object.keys(data[0]);
   
   return (
     <div className="overflow-auto">
-      <Table>
-        <TableHeader>
-          <TableRow>
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead className="bg-gray-50">
+          <tr>
             {keys.map((key) => (
-              <TableHead key={key}>
+              <th
+                key={key}
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 {key}
-              </TableHead>
+              </th>
             ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
           {data.map((row, rowIndex) => (
-            <TableRow key={rowIndex}>
+            <tr key={rowIndex}>
               {keys.map((key) => (
-                <TableCell key={`${rowIndex}-${key}`}>
+                <td key={`${rowIndex}-${key}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {/* Format different types of data */}
                   {typeof row[key] === 'object' 
                     ? JSON.stringify(row[key])
-                    : String(row[key] !== null ? row[key] : 'NULL')}
-                </TableCell>
+                    : String(row[key])}
+                </td>
               ))}
-            </TableRow>
+            </tr>
           ))}
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
     </div>
   );
 };
@@ -256,16 +256,8 @@ const EmployeeSQLPage = () => {
     setError(null);
     
     try {
-      // Execute the query using Supabase's rpc call
-      const { data, error: supabaseError } = await supabase.rpc('execute_sql', { 
-        sql_query: query 
-      });
-      
-      if (supabaseError) {
-        throw supabaseError;
-      }
-      
-      setQueryResults(data || []);
+      const results = await mockDBService.executeQuery(query);
+      setQueryResults(results);
       
       // Add to history if not a duplicate of the most recent query
       if (queryHistory.length === 0 || queryHistory[0] !== query) {
@@ -274,17 +266,17 @@ const EmployeeSQLPage = () => {
       
       toast({
         title: "Query Successful",
-        description: `Executed query with ${data?.length || 0} results`,
+        description: `Executed query with ${results.length} results`,
         variant: "default",
       });
-    } catch (err: any) {
+    } catch (err) {
       console.error("Query error:", err);
-      setError(err.message || "Error executing query. Please check your syntax.");
+      setError("Error executing query. Please check your syntax.");
       setQueryResults(null);
       
       toast({
         title: "Query Error",
-        description: err.message || "There was an error executing your query",
+        description: "There was an error executing your query",
         variant: "destructive",
       });
     } finally {
@@ -380,7 +372,7 @@ const EmployeeSQLPage = () => {
         <Card className="border-bank-navy/20">
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2">
-              <Database className="h-5 w-5 text-bank-navy" />
+              <BarChart className="h-5 w-5 text-bank-navy" />
               Advanced SQL Queries
             </CardTitle>
           </CardHeader>
