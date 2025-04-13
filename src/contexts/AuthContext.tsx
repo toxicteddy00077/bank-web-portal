@@ -1,6 +1,5 @@
-
 import React, { createContext, useState, useContext, ReactNode } from 'react';
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 // Defining user types and data structures
 export type UserRole = 'customer' | 'employee' | null;
